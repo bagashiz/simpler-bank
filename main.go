@@ -3,8 +3,7 @@ package main
 import "github.com/bagashiz/simpler-bank/db"
 
 func main() {
-	_, err := db.InitDB()
-	if err != nil {
-		panic(err.Error())
-	}
+	// initiate database
+	db.Connect()
+	db.Migrate()
 }

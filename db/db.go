@@ -1,20 +1,30 @@
 package db
 
 import (
+	"log"
+
 	"github.com/bagashiz/simpler-bank/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var (
+	db  *gorm.DB
+	err error
+)
 
-func InitDB() (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open("host=localhost user=root password=password dbname=simpler_bank port=5432 sslmode=disable TimeZone=UTC"), &gorm.Config{})
+func Connect() {
+	db, err = gorm.Open(postgres.Open("host=localhost user=root password=password dbname=simpler_bank port=5432 sslmode=disable TimeZone=UTC"), &gorm.Config{})
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
+		panic("Cannot connect to DB!")
 	}
 
-	err = db.Debug().AutoMigrate(
+	log.Println("Connected to DB.")
+}
+
+func Migrate() {
+	err = db.AutoMigrate(
 		&models.User{},
 		&models.Account{},
 		&models.Transfer{},
@@ -22,10 +32,11 @@ func InitDB() (*gorm.DB, error) {
 		&models.Session{},
 	)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
+		panic("Cannot migrate DB!")
 	}
 
-	return db, nil
+	log.Println("DB migration completed.")
 }
 
 func GetDB() *gorm.DB {
