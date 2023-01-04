@@ -7,6 +7,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+// GetDSN returns data source name for database connection with specified environment variables from .env file.
 func GetDSN() (dsn string) {
 	dsn = fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
