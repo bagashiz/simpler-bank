@@ -6,3 +6,8 @@ createdb:
 
 dropdb:
 	podman exec -ti postgres-server dropdb simpler_bank
+
+server:
+	go run main.go
+
+.PHONY: postgres createdb dropdb server
