@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// User entity struct.
 type User struct {
 	Username          string    `gorm:"type:varchar;not null;primaryKey;" json:"username"`
 	FullName          string    `gorm:"type:varchar;not null" json:"full_name"`

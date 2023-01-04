@@ -1,5 +1,6 @@
 package models
 
+// Accounts entity struct.
 type Account struct {
 	Model
 	Owner         string     `gorm:"type:varchar;not null;index;uniqueIndex:owner_currency_key" json:"owner"`

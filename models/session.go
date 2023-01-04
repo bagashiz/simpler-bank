@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// Sessions entity struct.
 type Session struct {
 	Model
 	Username     string    `gorm:"type:varchar;not null" json:"username"`
