@@ -22,3 +22,9 @@ func GetDSN() (dsn string) {
 
 	return
 }
+
+// GetHTTPServerAddress returns HTTP server address for routers connection with specified environment variables from .env file.
+func GetHTTPServerAddress() (address string) {
+	address = os.Getenv("HTTP_SERVER_ADDRESS")
+	return
+}
