@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	v1c "github.com/bagashiz/simpler-bank/controllers/v1"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +20,9 @@ func SetupRouter() {
 			"message": "Simpler Bank API V1",
 		})
 	})
+
+	// User routes
+	v1.POST("/users", v1c.CreateUser)
 }
 
 // Start attaches the router to a server and starts listening and serving HTTP requests from specified address.
