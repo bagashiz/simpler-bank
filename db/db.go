@@ -27,7 +27,8 @@ func Connect() {
 // Migrate runs auto migration for the specified entities from models package using gorm.
 func Migrate() {
 	err = db.AutoMigrate(
-		&models.User{},
+		//* commented to remove fk constraint violation temporarily
+		// &models.User{},
 		&models.Account{},
 		&models.Transfer{},
 		&models.Entry{},
