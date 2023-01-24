@@ -5,7 +5,10 @@ import (
 	"net/http"
 
 	v1c "github.com/bagashiz/simpler-bank/controllers/api/v1"
+	"github.com/bagashiz/simpler-bank/helpers"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 )
 
 var router *gin.Engine
@@ -13,6 +16,12 @@ var router *gin.Engine
 // SetupRouter performs all route operations.
 func SetupRouter() {
 	router = gin.Default()
+
+	// register custom validator
+	if validator, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		validator.RegisterValidation("currency", helpers.ValidCurrency)
+	}
+
 	v1 := router.Group("/api/v1")
 
 	v1.GET("/", func(c *gin.Context) {

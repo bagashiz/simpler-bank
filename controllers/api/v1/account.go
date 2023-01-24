@@ -22,7 +22,7 @@ type accountResponse struct {
 // createAccountRequest is the request body for creating an account.
 type createAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
-	Currency string `json:"currency" binding:"required,oneof=USD EUR IDR"`
+	Currency string `json:"currency" binding:"required,currency"`
 }
 
 // CreateAccount is a function to create an account for a user.
