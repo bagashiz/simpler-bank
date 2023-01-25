@@ -1,23 +1,13 @@
 package v1controllers
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/bagashiz/simpler-bank/helpers"
 	v1s "github.com/bagashiz/simpler-bank/services/api/v1"
 	"github.com/gin-gonic/gin"
 )
-
-// accountResponse is the response body for account related requests.
-type accountResponse struct {
-	ID        uint      `json:"id"`
-	Owner     string    `json:"owner"`
-	Balance   int64     `json:"balance"`
-	Currency  string    `json:"currency"`
-	CreatedAt time.Time `json:"created_at"`
-}
 
 // createAccountRequest is the request body for creating an account.
 type createAccountRequest struct {
@@ -42,7 +32,7 @@ func CreateAccount(ctx *gin.Context) {
 	account, err := v1s.CreateAccount(ctx, arg)
 	if err != nil {
 		if helpers.IsUniqueViolation(err) {
-			ctx.JSON(http.StatusForbidden, helpers.ErrorResponse(errors.New("account already exists")))
+			ctx.JSON(http.StatusForbidden, helpers.ErrorResponse(fmt.Errorf("account with owner [%s] and currency [%s] already exists", req.Owner, req.Currency)))
 			return
 		}
 
@@ -50,15 +40,7 @@ func CreateAccount(ctx *gin.Context) {
 		return
 	}
 
-	rsp := accountResponse{
-		ID:        account.ID,
-		Owner:     account.Owner,
-		Balance:   account.Balance,
-		Currency:  account.Currency,
-		CreatedAt: account.CreatedAt,
-	}
-
-	ctx.JSON(http.StatusCreated, helpers.Response(rsp))
+	ctx.JSON(http.StatusCreated, helpers.Response(account))
 }
 
 // getAccountRequest is the request body for getting an account.
@@ -78,7 +60,7 @@ func GetAccount(ctx *gin.Context) {
 	if err != nil {
 		// if record not found
 		if helpers.IsRecordNotFound(err) {
-			ctx.JSON(http.StatusNotFound, helpers.ErrorResponse(errors.New("account not found")))
+			ctx.JSON(http.StatusNotFound, helpers.ErrorResponse(fmt.Errorf("account with ID [%d] not found", req.ID)))
 			return
 		}
 
@@ -86,15 +68,7 @@ func GetAccount(ctx *gin.Context) {
 		return
 	}
 
-	rsp := accountResponse{
-		ID:        account.ID,
-		Owner:     account.Owner,
-		Balance:   account.Balance,
-		Currency:  account.Currency,
-		CreatedAt: account.CreatedAt,
-	}
-
-	ctx.JSON(http.StatusOK, helpers.Response(rsp))
+	ctx.JSON(http.StatusOK, helpers.Response(account))
 }
 
 // listAccountRequest is the request body for listing accounts with pagination.
@@ -122,16 +96,5 @@ func ListAccounts(ctx *gin.Context) {
 		return
 	}
 
-	var rsp []accountResponse
-	for _, account := range accounts {
-		rsp = append(rsp, accountResponse{
-			ID:        account.ID,
-			Owner:     account.Owner,
-			Balance:   account.Balance,
-			Currency:  account.Currency,
-			CreatedAt: account.CreatedAt,
-		})
-	}
-
-	ctx.JSON(http.StatusOK, helpers.Response(rsp))
+	ctx.JSON(http.StatusOK, helpers.Response(accounts))
 }
