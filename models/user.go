@@ -10,6 +10,6 @@ type User struct {
 	Email             string    `gorm:"type:varchar;not null;unique" json:"email"`
 	HashedPassword    string    `gorm:"type:varchar;not null" json:"hashed_password"`
 	PasswordChangedAt time.Time `gorm:"not null;autoCreateTime" json:"password_changed_at"`
-	Accounts          []Account `gorm:"foreignKey:Owner;references:Username"`
-	Sessions          []Session `gorm:"foreignKey:Username;references:Username"`
+	Accounts          []Account `gorm:"foreignKey:Owner;references:Username" json:"-"`
+	Sessions          []Session `gorm:"foreignKey:Username;references:Username" json:"-"`
 }
