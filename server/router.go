@@ -2,7 +2,6 @@ package server
 
 import (
 	"log"
-	"net/http"
 
 	v1c "github.com/bagashiz/simpler-bank/controllers/api/v1"
 	"github.com/bagashiz/simpler-bank/helpers"
@@ -24,16 +23,13 @@ func SetupRouter() {
 
 	v1 := router.Group("/api/v1")
 
-	v1.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Simpler Bank API V1",
-		})
-	})
-
-	// accounts routes
+	// v1 accounts routes
 	v1.POST("/accounts", v1c.CreateAccount)
 	v1.GET("/accounts/:id", v1c.GetAccount)
 	v1.GET("/accounts", v1c.ListAccounts)
+
+	// v1 transfers routes
+	v1.POST("/transfers", v1c.CreateTransfer)
 }
 
 // Start attaches the router to a server and starts listening and serving HTTP requests from specified address.
