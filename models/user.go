@@ -11,5 +11,4 @@ type User struct {
 	HashedPassword    string    `gorm:"type:varchar;not null" json:"hashed_password"`
 	PasswordChangedAt time.Time `gorm:"not null;autoCreateTime" json:"password_changed_at"`
 	Accounts          []Account `gorm:"foreignKey:Owner;references:Username" json:"-"`
-	Sessions          []Session `gorm:"foreignKey:Username;references:Username" json:"-"`
 }
