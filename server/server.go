@@ -1,8 +1,7 @@
 package server
 
 import (
-	"log"
-
+	"github.com/bagashiz/simpler-bank/configs"
 	v1c "github.com/bagashiz/simpler-bank/controllers/api/v1"
 	"github.com/bagashiz/simpler-bank/helpers"
 	"github.com/gin-gonic/gin"
@@ -10,16 +9,30 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-var router *gin.Engine
+type Server struct {
+	config configs.Config
+	router *gin.Engine
+}
 
-// SetupRouter performs all route operations.
-func SetupRouter() {
-	router = gin.Default()
+// NewServer creates a new HTTP server.
+func NewServer(config configs.Config) (*Server, error) {
+	server := &Server{
+		config: config,
+	}
 
 	// register custom validator
 	if validator, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		validator.RegisterValidation("currency", helpers.ValidCurrency)
 	}
+
+	server.setupRouter()
+
+	return server, nil
+}
+
+// setupRouter performs all route operations.
+func (server *Server) setupRouter() {
+	router := gin.Default()
 
 	v1 := router.Group("/api/v1")
 
@@ -30,12 +43,11 @@ func SetupRouter() {
 
 	// v1 transfers routes
 	v1.POST("/transfers", v1c.CreateTransfer)
+
+	server.router = router
 }
 
 // Start attaches the router to a server and starts listening and serving HTTP requests from specified address.
-func Start(address string) {
-	err := router.Run(address)
-	if err != nil {
-		log.Fatal(err)
-	}
+func (server *Server) Start(address string) error {
+	return server.router.Run(address)
 }
